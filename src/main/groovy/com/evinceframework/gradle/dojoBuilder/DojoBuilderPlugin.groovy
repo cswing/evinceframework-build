@@ -58,7 +58,9 @@ public class DojoBuilderPlugin implements Plugin<Project> {
 			project.copy {
 				into "${convention.sourceRepository}/${convention.sourceDestination}"
 				from "${convention.source}/${convention.profile}"
-				expand(basePath: '../../../' + convention.dojoSourcePath, releaseDir: convention.outputPath, sourceDestination: convention.sourceDestination)
+				expand(basePath: '../' + convention.dojoSourcePath, 
+					releaseDir: convention.outputPath.replaceAll('\\\\', '/'), 
+					sourceDestination: convention.sourceDestination)
 			}
 		}
 		
