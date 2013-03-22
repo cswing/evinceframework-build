@@ -1,0 +1,13 @@
+{
+	"name": "evf-example",
+	"main":"main",
+	"dependencies": {
+		"dojo": "current"
+	},
+	"description": "Evince Framework Build Tools Example",
+	"licenses": [],
+	"bugs": "",
+	"keywords": [],
+	"homepage": "http://www.evinceframework.com/",
+	"dojoBuild": "package.js"
+}

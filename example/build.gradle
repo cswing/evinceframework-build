@@ -1,0 +1,19 @@
+
+buildscript {
+    repositories {
+        mavenLocal()
+    }
+
+    dependencies {
+        classpath 'com.evinceframework:evf-buildTools:0.1.0'
+    }
+}
+
+version = '0.1.0'
+
+apply plugin: 'dojo'
+
+dojo {
+    dojoVersion='1.8.3'
+    sourceRepository="${thirdPartyJavascript}"
+}
