@@ -11,5 +11,8 @@
 
 # gradle
 .gradle/*
+*/.gradle/*
 build/*
+*/build/*
 lib/*
+*/lib/*

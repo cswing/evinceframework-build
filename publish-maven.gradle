@@ -10,7 +10,7 @@ install {
     repositories.mavenInstaller {
         customizePom(pom, project)
 		pom {
-			artifactId = "evf-${project.name}"
+			artifactId = "evf-buildTools"
 		}
     }	
 }
