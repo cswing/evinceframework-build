@@ -4,3 +4,12 @@
 *.jar
 *.war
 *.ear
+
+# eclipse
+.eclipse-bin/*
+.settings/*
+
+# gradle
+.gradle/*
+build/*
+lib/*

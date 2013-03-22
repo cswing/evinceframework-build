@@ -1,0 +1,21 @@
+
+apply plugin: 'groovy'
+apply from: "${rootProject.projectDir}/publish-maven.gradle"
+
+group = 'com.evinceframework'
+
+version = '0.1.0'
+
+repositories {
+   mavenCentral()
+}
+
+dependencies {
+   compile gradleApi()
+   //groovy localGroovy()
+}
+
+task copyToLib(type: Sync) {
+    into "${projectDir}/lib"
+    from configurations.testCompile
+}
