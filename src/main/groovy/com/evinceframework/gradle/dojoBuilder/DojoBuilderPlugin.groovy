@@ -64,35 +64,30 @@ public class DojoBuilderPlugin implements Plugin<Project> {
 			}
 		}
 		
-		project.task('clean', dependsOn:['deleteFromBuildSource', 'deleteOutput']){}
+		project.task('clean', dependsOn:['uninstallSource', 'deleteOutput']){}
 		
-		project.task('buildUsingJava', dependsOn: ['installSource', 'deleteOutput']) << {
-			def jexec = new JavaExec()
-				.main='org.mozilla.javascript.tools.shell.Main'
-				.classpath=project.files("${convention.sourceRepository}/dojo-release-${convention.dojoVersion}-src/util/shrinksafe/js.jar", "${convention.sourceRepository}/dojo-release-${convention.dojoVersion}-src/util/closureCompiler/compiler.jar", "${convention.sourceRepository}/dojo-release-${convention.dojoVersion}-src/util/shrinksafe/shrinksafe.jar")
-				.args=['../../dojo/dojo.js', 'baseUrl=../../dojo', 'load=build', "profile=../../../${convention.sourceDestination}/${convention.profile}", 'action=release', 'releaseName=output', 'copyTests=false', 'optimize=comments', 'cssOptimize=comments']
-				.workingDir="${convention.sourceRepository}/${convention.dojoSourcePath}/util/buildscripts"
-				.exec()
-		}
-		
-		project.task('buildUsingNode', dependsOn: ['installSource', 'deleteOutput']) << {
-			def command = "node ${convention.dojoSourcePath}/dojo/dojo.js load=build --profile ${convention.sourceDestination}/${convention.profile} --release --version=${project.version}".toString()
-			println(command)
-			def proc = command.execute(null, new File(convention.sourceRepository))
-			proc.in.eachLine {line -> println line}
-			proc.err.eachLine {line -> println 'ERROR: ' + line}
-			proc.waitFor()
-		}
-		
-		project.task('buildDojo', dependsOn: 'buildUsingNode') {
-			/*
-			whenScheduled(name) {
-				gradle.projectsEvaluated {
-					project.buildDojo.dependsOn convention.useNode ? 'buildUsingNode' : 'buildUsingJava'
+		project.task('build', dependsOn: ['installSource', 'deleteOutput']) << {
+			
+			if(convention.buildWithNode){
+				println('Building using Node')
+			
+				def command = "node ${convention.dojoSourcePath}/dojo/dojo.js load=build --profile ${convention.sourceDestination}/${convention.profile} --release --version=${project.version}".toString()
+				println(command)
+				def proc = command.execute(null, new File(convention.sourceRepository))
+				proc.in.eachLine {line -> println line}
+				proc.err.eachLine {line -> println 'ERROR: ' + line}
+				proc.waitFor()
+				
+			} else {
+				println('Building using Java')
+				
+				project.javaexec {
+					main='org.mozilla.javascript.tools.shell.Main'
+					classpath=project.files("${convention.sourceRepository}/dojo-release-${convention.dojoVersion}-src/util/shrinksafe/js.jar", "${convention.sourceRepository}/dojo-release-${convention.dojoVersion}-src/util/closureCompiler/compiler.jar", "${convention.sourceRepository}/dojo-release-${convention.dojoVersion}-src/util/shrinksafe/shrinksafe.jar")
+					args=['../../dojo/dojo.js', 'baseUrl=../../dojo', 'load=build', "profile=../../../${convention.sourceDestination}/${convention.profile}", 'action=release', 'releaseName=output', 'copyTests=false', 'optimize=comments', 'cssOptimize=comments']
+					workingDir="${convention.sourceRepository}/${convention.dojoSourcePath}/util/buildscripts"
 				}
 			}
-			*/
-		}		
+		}
 	}
-	
 }

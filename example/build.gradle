@@ -15,5 +15,6 @@ apply plugin: 'dojo'
 
 dojo {
     dojoVersion='1.8.3'
-    sourceRepository="${thirdPartyJavascript}"
+    sourceRepository=javascriptRepo
+    buildWithNode=project.hasProperty('useNode').toBoolean() && project.useNode.toBoolean()
 }

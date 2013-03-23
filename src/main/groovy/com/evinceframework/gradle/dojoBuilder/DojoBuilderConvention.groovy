@@ -43,7 +43,7 @@ public class DojoBuilderConvention {
 	 * Tells the DojoBuilder plugin to use Node or Java to perform the build.
 	 * Defaults to false, which means Java will be used. 
 	 */
-	boolean useNode = false;
+	boolean buildWithNode = false;
 	
 	/**
 	 * The DojoBuilder plugin relies on a repository of javascript source code to build from.
@@ -95,7 +95,7 @@ public class DojoBuilderConvention {
 	 * 
 	 * The default value is <pre>build.profile.js</pre>
 	 */
-	String profile = "build.profile.js"
+	String profile = 'build.profile.js'
 	
 	/**
 	 * The directory where the output of the build should be placed.

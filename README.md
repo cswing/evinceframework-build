@@ -8,9 +8,9 @@ Dojo Toolkit Plugin
 
 Configure and execute a Dojo Toolkit build in your Gradle script.
 
-The plugin expects the Dojo Toolkit SDK and any other source external modules (dgrid, etc) to exist in a directory on the machine.  
-This directory is known as the source repository.  The plugin will copy the source from the project to the 
-source repository and perform a Dojo Toolkit build.  The output of the build will be placed into the project's
+The plugin expects the Dojo Toolkit SDK and any other source external modules (dgrid, etc) to exist in a directory 
+on the machine.  This directory is known as the source repository.  The plugin will copy the source from the project 
+to the source repository and perform a Dojo Toolkit build.  The output of the build will be placed into the project's
 `build/release` directory.
 
 A complete working example can be found in the example directory.
@@ -40,12 +40,13 @@ A complete working example can be found in the example directory.
     
     dojo {
       dojoVersion='1.8.3'
-      sourceRepository='${javascriptRepo}'
+      sourceRepository=javascriptRepo
+      buildWithNode=project.hasProperty('useNode').toBoolean() && project.useNode.toBoolean()
     }
 
 *usage*
 
-    > gradle buildDojo -PjavascriptRepo=C:/JS_SOURCE/
+    > gradle build -PjavascriptRepo=C:/JS_SOURCE -PuseNode=true
 
 ### Tasks
 
@@ -55,7 +56,5 @@ A complete working example can be found in the example directory.
 |uninstallSource    |Removes the source from the source reporitory.                   |
 |deleteOutput       |Removes the output from previous build.                          |
 |clean              |Performs the uninstallSource and deleteOutput tasks.             |
-|buildUsingJava     |Performs a Dojo Toolkit build using a Java process and Rhino.    |
-|buildUsingNode     |Performs a Dojo Toolkit build using Node.                        |
-|buildDojo          |Performs a Dojo Toolkit build using either Java or Node.         | 
+|build              |Performs a Dojo Toolkit build using either Java or Node.         | 
 
