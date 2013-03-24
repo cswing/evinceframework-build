@@ -5,7 +5,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.evinceframework:evf-buildTools:0.1.0'
+        classpath 'com.evinceframework:evf-buildTools:0.1.0-SNAPSHOT'
     }
 }
 

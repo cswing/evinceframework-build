@@ -1,8 +1,25 @@
-
 apply plugin: 'groovy'
-apply from: "${rootProject.projectDir}/publish-maven.gradle"
+apply plugin: 'maven'
+apply plugin: 'signing'
 
+ext.isSnapshot=version.endsWith('SNAPSHOT')
+
+// uploadArchives properties
 group = 'com.evinceframework'
+ext.artifactId = 'evf-buildTools'
+ext.optionalDeps = []
+ext.providedDeps = []
+ext.optional = { optionalDeps << it }
+ext.provided = { providedDeps << it }
+
+// signing properties
+// ext."signing.secretKeyRingFile"=evfSigningKeyFile 
+// This format WILL NOT work. 'required' does not properly evaluate
+// This format WORKS, but is deprecated.
+signing.keyId=evfSigningId
+signing.password=evfSigningPassword
+signing.secretKeyRingFile=evfSigningKeyFile
+
 println "Building version: ${version}"
 
 repositories {
@@ -48,4 +65,71 @@ artifacts {
 task copyToLib(type: Sync) {
     into "${projectDir}/lib"
     from configurations.testCompile
+}
+
+signing {	
+	required { !isSnapshot.toBoolean() }
+	sign configurations.archives
+}
+
+install {
+	repositories.mavenInstaller {
+		customizePom(pom, project)
+		pom {
+			artifactId = project.artifactId
+		}
+	}
+}
+
+uploadArchives {
+	repositories.mavenDeployer {
+		customizePom(pom, project)
+		pom {
+			artifactId = project.artifactId
+		}
+		
+		beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+		repository(url: "file://C:/PublishedReleases") {}
+	}
+}
+
+def customizePom(pom, gradleProject) {
+	pom.whenConfigured { generatedPom ->
+		
+		// respect 'optional' and 'provided' dependencies
+		gradleProject.optionalDeps.each { dep ->
+			generatedPom.dependencies.find { it.artifactId == dep.name }?.optional = true
+		}
+		gradleProject.providedDeps.each { dep ->
+			generatedPom.dependencies.find { it.artifactId == dep.name }?.scope = 'provided'
+		}
+
+		// eliminate test-scoped dependencies (no need in maven central poms)
+		generatedPom.dependencies.removeAll { dep ->
+			dep.scope == 'test'
+		}
+
+		// add all items necessary for maven central publication
+		generatedPom.project {
+			name = gradleProject.description
+			description = gradleProject.description
+			url = 'https://github.com/cswing/evinceframework-build'
+			organization {
+				name = 'Evince Framework'
+				url = 'http://www.evinceframework.com'
+			}
+			licenses {
+				license {
+					name 'The Apache Software License, Version 2.0'
+					url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+					distribution 'repo'
+				}
+			}
+			scm {
+				url = 'https://github.com/cswing/evinceframework-build'
+				connection = 'scm:git:git://github.com/cswing/evinceframework-build'
+				developerConnection = 'scm:git:git://github.com/cswing/evinceframework-build'
+			}
+		}
+	}
 }
