@@ -3,8 +3,7 @@ apply plugin: 'groovy'
 apply from: "${rootProject.projectDir}/publish-maven.gradle"
 
 group = 'com.evinceframework'
-
-version = '0.1.0'
+println "Building version: ${version}"
 
 repositories {
    mavenCentral()
@@ -13,6 +12,37 @@ repositories {
 dependencies {
    compile gradleApi()
    //groovy localGroovy()
+}
+
+task sourcesJar(type: Jar, dependsOn:classes) {
+	classifier = 'sources'
+	from sourceSets.main.allGroovy
+}
+
+task groovydocJar(type: Jar, dependson: groovydoc) {
+	classifier = 'groovydoc'
+	from groovydoc
+}
+
+task javadocReadme(dependsOn: javadoc) << {
+	
+	file('build/docs/javadoc').mkdirs()
+	
+	File readme = file('build/docs/javadoc/README.md')
+	readme.write("There is no JavaDoc.  See GroovyDoc.")
+}
+
+task javadocJar(type: Jar, dependsOn: javadocReadme) {
+	classifier = 'javadoc'
+	from 'build/docs/javadoc'
+}
+
+artifacts {
+	archives jar
+	
+	archives groovydocJar
+	archives javadocJar
+	archives sourcesJar
 }
 
 task copyToLib(type: Sync) {
