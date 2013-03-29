@@ -6,7 +6,7 @@ ext.isSnapshot=version.endsWith('SNAPSHOT')
 
 // uploadArchives properties
 group = 'com.evinceframework'
-ext.artifactId = 'evf-buildTools'
+ext.artifactId = 'evf-build-gradle'
 ext.optionalDeps = []
 ext.providedDeps = []
 ext.optional = { optionalDeps << it }
