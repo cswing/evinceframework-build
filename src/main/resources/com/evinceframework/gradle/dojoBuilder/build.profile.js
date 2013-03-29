@@ -6,10 +6,10 @@
         action:         "release",
         releaseName:	"${profile.releaseName}",
         
-        layerOptimize:	"${profile.layerOptimize}",
-        optimize:		"${profile.optimize}",
+        layerOptimize:	<% if(profile.layerOptimize==false){%>false<%}else{%>"${profile.layerOptimize}"<%}%>,
+        optimize:		<% if(profile.optimize==false){%>false<%}else{%>"${profile.optimize}"<%}%>,
         cssOptimize:    "${profile.cssOptimize}",
-        mini:			"${profile.mini}",
+        mini:			${profile.mini},
         stripConsole:	"${profile.stripConsole}",
         selectorEngine: "${profile.selectorEngine}",
         

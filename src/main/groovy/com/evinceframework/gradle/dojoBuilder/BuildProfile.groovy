@@ -81,15 +81,15 @@ public class BuildProfile {
 	 * minification and the other valid values are "shrinksafe.keeplines", "closure", "closure.keeplines", "comment", 
 	 * and "comment.keeplines". 
 	 */
-	String layerOptimize = 'shrinksafe'
+	def layerOptimize = 'shrinksafe'
 	
 	/**
-	 * Sets the minification for modules that aren't part of a layer. This defaults to false and takes the sames 
+	 * Sets the minification for modules that aren't part of a layer. This defaults to false and takes the same 
 	 * values as layerOptimize.
 	 * 
 	 * @see #layerOptimize
 	 */
-	String optimize = 'false'
+	def optimize = false
 	
 	/**
 	 * Deals with how CSS is optimized. Defaults to "comments"
