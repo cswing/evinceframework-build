@@ -51,7 +51,7 @@ public class DojoBuilderPlugin implements Plugin<Project> {
 		}
 
 		project.task('installSource', dependsOn: 'uninstallSource') << {
-			
+
 			println "Installing to ${convention.sourceRepository}/${convention.sourceDestination}"
 			
 			project.copy {
@@ -103,11 +103,4 @@ public class DojoBuilderPlugin implements Plugin<Project> {
 		return result
 	}
 	
-//	def getProfileTemplate() {
-//		def resource = this.class.getClassLoader().getResource('com/evinceframework/gradle/dojoBuilder/build.profile.js')
-//		
-//		//println "Resource: ${resource}"
-//		
-//		return new File(resource.toURI())		
-//	}
 }
