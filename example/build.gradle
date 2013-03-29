@@ -5,7 +5,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.evinceframework:evf-buildTools:0.1.0-SNAPSHOT'
+        classpath 'com.evinceframework:evf-build-gradle:0.1.0-SNAPSHOT'
     }
 }
 
@@ -17,4 +17,15 @@ dojo {
     dojoVersion='1.8.3'
     sourceRepository=javascriptRepo
     buildWithNode=project.hasProperty('useNode').toBoolean() && project.useNode.toBoolean()
+	
+	profile.configure {
+		// packages - dojo, dijit added automatically.
+		pkg name: 'dojox'
+		pkg name: 'evf-example'
+		
+		// layers
+		boot()
+		layer name: 'evf-example/app', includes: ['evf-example/CustomWidget']
+	}
 }
+
