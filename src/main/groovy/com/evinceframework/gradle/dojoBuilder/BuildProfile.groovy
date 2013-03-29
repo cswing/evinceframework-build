@@ -150,8 +150,8 @@ public class BuildProfile {
 		} else {
 			// if no location is passed, then the assumption is that this is the package
 			// for the current project.
-			def location = obj.location ?: convention.sourceDestination
-			packages.add(name: obj.name, location: "../${location}/${obj.name}")
+			def location = obj.location ?: "${convention.sourceDestination}/${obj.name}"
+			packages.add(name: obj.name, location: "../${location}")
 		}
 	}
 	
