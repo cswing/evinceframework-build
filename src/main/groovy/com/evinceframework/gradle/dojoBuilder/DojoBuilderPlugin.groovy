@@ -15,9 +15,10 @@
  */
 package com.evinceframework.gradle.dojoBuilder
 
+import groovy.text.SimpleTemplateEngine
+
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.tasks.JavaExec
 
 /**
  * Provides a Gradle Plugin for a project that will take a set of javascript files and
@@ -50,18 +51,20 @@ public class DojoBuilderPlugin implements Plugin<Project> {
 		}
 
 		project.task('installSource', dependsOn: 'uninstallSource') << {
+			
+			println "Installing to ${convention.sourceRepository}/${convention.sourceDestination}"
+			
 			project.copy {
 				into "${convention.sourceRepository}/${convention.sourceDestination}"
 				from "${convention.source}"
-				exclude(convention.profile)
 			}
-			project.copy {
-				into "${convention.sourceRepository}/${convention.sourceDestination}"
-				from "${convention.source}/${convention.profile}"
-				expand(basePath: '../' + convention.dojoSourcePath, 
-					releaseDir: convention.outputPath.replaceAll('\\\\', '/'), 
-					sourceDestination: convention.sourceDestination)
+			
+			File file = new File("${convention.sourceRepository}/${convention.sourceDestination}/${convention.profile.filename}")
+			if (file.exists()) {
+				assert file.delete()
+				assert file.createNewFile()
 			}
+			file << createProfileContent([profile: convention.profile, bootLayer: convention.profile.bootLayer])
 		}
 		
 		project.task('clean', dependsOn:['uninstallSource', 'deleteOutput']){}
@@ -71,12 +74,14 @@ public class DojoBuilderPlugin implements Plugin<Project> {
 			if(convention.buildWithNode){
 				println('Building using Node')
 			
-				def command = "node ${convention.dojoSourcePath}/dojo/dojo.js load=build --profile ${convention.sourceDestination}/${convention.profile} --release --version=${project.version}".toString()
+				def command = "node ${convention.dojoSourcePath}/dojo/dojo.js load=build --profile ${convention.sourceDestination}/${convention.profile.filename} --release --version=${project.version}".toString()
 				println(command)
 				def proc = command.execute(null, new File(convention.sourceRepository))
 				proc.in.eachLine {line -> println line}
 				proc.err.eachLine {line -> println 'ERROR: ' + line}
 				proc.waitFor()
+				
+				assert proc.exitValue() == 0: "node returned a non zero exit code: ${proc.exitValue()}"
 				
 			} else {
 				println('Building using Java')
@@ -84,10 +89,25 @@ public class DojoBuilderPlugin implements Plugin<Project> {
 				project.javaexec {
 					main='org.mozilla.javascript.tools.shell.Main'
 					classpath=project.files("${convention.sourceRepository}/dojo-release-${convention.dojoVersion}-src/util/shrinksafe/js.jar", "${convention.sourceRepository}/dojo-release-${convention.dojoVersion}-src/util/closureCompiler/compiler.jar", "${convention.sourceRepository}/dojo-release-${convention.dojoVersion}-src/util/shrinksafe/shrinksafe.jar")
-					args=['../../dojo/dojo.js', 'baseUrl=../../dojo', 'load=build', "profile=../../../${convention.sourceDestination}/${convention.profile}", 'action=release', 'releaseName=output', 'copyTests=false', 'optimize=comments', 'cssOptimize=comments']
+					args=['../../dojo/dojo.js', 'baseUrl=../../dojo', 'load=build', "profile=../../../${convention.sourceDestination}/${convention.profile.filename}"]
 					workingDir="${convention.sourceRepository}/${convention.dojoSourcePath}/util/buildscripts"
 				}
 			}
 		}
 	}
+	
+	def createProfileContent(binding) {
+		def text = this.class.getClassLoader().getResource('com/evinceframework/gradle/dojoBuilder/build.profile.js')
+		def engine = new SimpleTemplateEngine()
+		def result = engine.createTemplate(text).make(binding).toString()
+		return result
+	}
+	
+//	def getProfileTemplate() {
+//		def resource = this.class.getClassLoader().getResource('com/evinceframework/gradle/dojoBuilder/build.profile.js')
+//		
+//		//println "Resource: ${resource}"
+//		
+//		return new File(resource.toURI())		
+//	}
 }
