@@ -32,17 +32,27 @@ A complete working example can be found in the example directory.
       }
 
       dependencies {
-        classpath 'com.evinceframework:evf-buildTools:0.1.0'
+        classpath 'com.evinceframework:evf-build-gradle:0.1.0'
       }
     }
         
     apply plugin: 'dojo'
     
     dojo {
-      dojoVersion='1.8.3'
-      sourceRepository=javascriptRepo
-      buildWithNode=project.hasProperty('useNode').toBoolean() && project.useNode.toBoolean()
-    }
+    	dojoVersion='1.8.3'
+    	sourceRepository=javascriptRepo
+    	buildWithNode=project.hasProperty('useNode').toBoolean() && project.useNode.toBoolean()
+	
+		profile.configure {
+			// packages - dojo, dijit added automatically.
+			pkg name: 'dojox'
+			pkg name: 'evf-example'
+			
+			// layers
+			boot()
+			layer name: 'evf-example/app', includes: ['evf-example/CustomWidget']
+		}
+	}
 
 *usage*
 
