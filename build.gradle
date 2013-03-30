@@ -12,14 +12,6 @@ ext.providedDeps = []
 ext.optional = { optionalDeps << it }
 ext.provided = { providedDeps << it }
 
-// signing properties
-// ext."signing.secretKeyRingFile"=evfSigningKeyFile 
-// This format WILL NOT work. 'required' does not properly evaluate
-// This format WORKS, but is deprecated.
-signing.keyId=evfSigningId
-signing.password=evfSigningPassword
-signing.secretKeyRingFile=evfSigningKeyFile
-
 println "Building version: ${version}"
 
 repositories {
@@ -89,7 +81,11 @@ uploadArchives {
 		}
 		
 		beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-		repository(url: "file://C:/PublishedReleases") {}
+		
+		//repository(url: "file://C:/PublishedReleases") {}
+		repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+			authentication(userName: sonatypeUsername, password: sonatypePassword)
+		}
 	}
 }
 
@@ -126,9 +122,9 @@ def customizePom(pom, gradleProject) {
 				}
 			}
 			scm {
-				url = 'https://github.com/cswing/evinceframework-build'
-				connection = 'scm:git:git://github.com/cswing/evinceframework-build'
-				developerConnection = 'scm:git:git://github.com/cswing/evinceframework-build'
+				url = 'git@github.com:cswing/evinceframework-build.git'
+				connection = 'scm:git:git@github.com:cswing/evinceframework-build.git'
+				developerConnection = 'scm:git:git@github.com:cswing/evinceframework-build.git'
 			}
 		}
 	}
