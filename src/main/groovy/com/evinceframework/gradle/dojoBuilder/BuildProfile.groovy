@@ -15,7 +15,6 @@
  */
 package com.evinceframework.gradle.dojoBuilder
 
-import groovy.lang.Closure;
 
 /**
  * Defines settings for the build.  These settings are used to build a profile to use when building.  More 
@@ -128,6 +127,14 @@ public class BuildProfile {
 	def packages = []	
 
 	/**
+	 * The external packages that will be added to the build release. 
+	 * 
+	 * @since 0.2.0
+	 * @see BuildProfile#extpkg(Object)
+	 */
+	def externalPackages = []
+	
+	/**
 	 * The default boot layer.  If defined this will appear as the first layer in the build profile. 
 	 */
 	def bootLayer = [:]
@@ -153,6 +160,21 @@ public class BuildProfile {
 			def location = obj.location ?: "${convention.sourceDestination}/${obj.name}"
 			packages.add(name: obj.name, location: "../${location}")
 		}
+	}
+	
+	/**
+	 * Define an external package that should be added to the release.  External packages 
+	 * are javascript artifacts that are not designed for an AMD build.  External packages 
+	 * should exist in the source repository and will be copied into the release.  They 
+	 * will not be modified by the build.
+	 * 
+	 * @param obj
+	 * @since 0.2.0
+	 * @see DojoBuilderConvention#getSourceRepository()
+	 * @see DojoBuilderConvention#getOutputPath()
+	 */
+	def extpkg(Object obj) {
+		externalPackages.add(name: obj.name, location: obj.location)
 	}
 	
 	/**

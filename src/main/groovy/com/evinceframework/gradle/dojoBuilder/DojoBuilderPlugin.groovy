@@ -70,7 +70,7 @@ public class DojoBuilderPlugin implements Plugin<Project> {
 		project.task('clean', dependsOn:['uninstallSource', 'deleteOutput']){}
 		
 		project.task('build', dependsOn: ['installSource', 'deleteOutput']) << {
-			
+		
 			if(convention.buildWithNode){
 				println('Building using Node')
 			
@@ -91,6 +91,20 @@ public class DojoBuilderPlugin implements Plugin<Project> {
 					classpath=project.files("${convention.sourceRepository}/dojo-release-${convention.dojoVersion}-src/util/shrinksafe/js.jar", "${convention.sourceRepository}/dojo-release-${convention.dojoVersion}-src/util/closureCompiler/compiler.jar", "${convention.sourceRepository}/dojo-release-${convention.dojoVersion}-src/util/shrinksafe/shrinksafe.jar")
 					args=['../../dojo/dojo.js', 'baseUrl=../../dojo', 'load=build', "profile=../../../${convention.sourceDestination}/${convention.profile.filename}"]
 					workingDir="${convention.sourceRepository}/${convention.dojoSourcePath}/util/buildscripts"
+				}
+			}
+			
+			// move external packages
+			convention.profile.externalPackages.each { pkg ->
+				
+				def dir = new File("${convention.profile.releaseDir}/${convention.profile.releaseName}/${pkg.name}");
+				def externalPackageAlreadyExists = dir.exists()
+				assert !externalPackageAlreadyExists: "External package is attemptint to overwrite a built package: ${pkg.name}" 
+				dir.mkdirs();
+				
+				project.copy {
+					into dir
+					from "${convention.sourceRepository}/${pkg.location}"
 				}
 			}
 		}
