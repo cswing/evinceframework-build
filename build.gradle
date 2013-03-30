@@ -86,6 +86,39 @@ uploadArchives {
 		repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
 			authentication(userName: sonatypeUsername, password: sonatypePassword)
 		}
+		
+		pom.project {
+			name 'Evince Framework Gradle Plugins'
+			packaging 'jar'
+			description 'Plugin for building Dojo Toolkit'
+			url = 'https://github.com/cswing/evinceframework-build'
+
+			organization {
+				name = 'Evince Framework'
+				url = 'http://www.evinceframework.com'
+			}
+			
+			scm {
+				url = 'git@github.com:cswing/evinceframework-build.git'
+				connection = 'scm:git:git@github.com:cswing/evinceframework-build.git'
+				developerConnection = 'scm:git:git@github.com:cswing/evinceframework-build.git'
+			}
+
+			licenses {
+				license {
+					name 'The Apache Software License, Version 2.0'
+					url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+					distribution 'repo'
+				}
+			}
+
+			developers {
+				developer {
+					id 'cswing'
+					name 'Craig Swing'
+				}
+			}
+		}
 	}
 }
 
@@ -103,29 +136,6 @@ def customizePom(pom, gradleProject) {
 		// eliminate test-scoped dependencies (no need in maven central poms)
 		generatedPom.dependencies.removeAll { dep ->
 			dep.scope == 'test'
-		}
-
-		// add all items necessary for maven central publication
-		generatedPom.project {
-			name = gradleProject.description
-			description = gradleProject.description
-			url = 'https://github.com/cswing/evinceframework-build'
-			organization {
-				name = 'Evince Framework'
-				url = 'http://www.evinceframework.com'
-			}
-			licenses {
-				license {
-					name 'The Apache Software License, Version 2.0'
-					url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-					distribution 'repo'
-				}
-			}
-			scm {
-				url = 'git@github.com:cswing/evinceframework-build.git'
-				connection = 'scm:git:git@github.com:cswing/evinceframework-build.git'
-				developerConnection = 'scm:git:git@github.com:cswing/evinceframework-build.git'
-			}
-		}
+		}		
 	}
 }
