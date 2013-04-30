@@ -1,0 +1,29 @@
+
+buildscript {
+    repositories {
+        mavenLocal()
+		mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.evinceframework:evf-build-gradle:0.2.0-SNAPSHOT'
+    }
+}
+
+version = '0.1.0'
+
+apply plugin: 'dojo'
+
+dojo {
+    dojoVersion='1.8.3'
+    buildWithNode=project.hasProperty('useNode').toBoolean() && project.useNode.toBoolean()
+	
+	themes.define {
+		customize themeName:'customGreen', variableFile:"src/green-variables.less", 
+			outputDirectory:"${userBuildHomeDirectory}/dojoplugin/.examples/less/customThemes/customGreen",
+			addlSources: [
+				[name: 'evf', location:'evf-master/themes/claro']
+			]
+	}
+}
+

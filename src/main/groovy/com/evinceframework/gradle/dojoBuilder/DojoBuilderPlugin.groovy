@@ -69,7 +69,14 @@ public class DojoBuilderPlugin implements Plugin<Project> {
 		
 		project.task('clean', dependsOn:['uninstallSource', 'deleteOutput']){}
 		
-		project.task('build', dependsOn: ['installSource', 'deleteOutput']) << {
+		project.task('generateThemes') << {
+		//project.task('generateThemes', dependsOn: 'installSource') << {
+			convention.themes.customThemes.each { theme ->
+				theme.execute()
+			}
+		}
+		
+		project.task('build', dependsOn: ['generateThemes', 'deleteOutput']) << {
 		
 			if(convention.buildWithNode){
 				println('Building using Node')
@@ -99,7 +106,7 @@ public class DojoBuilderPlugin implements Plugin<Project> {
 				
 				def dir = new File("${convention.profile.releaseDir}/${convention.profile.releaseName}/${pkg.name}");
 				def externalPackageAlreadyExists = dir.exists()
-				assert !externalPackageAlreadyExists: "External package is attemptint to overwrite a built package: ${pkg.name}" 
+				assert !externalPackageAlreadyExists: "External package is attempting to overwrite a built package: ${pkg.name}" 
 				dir.mkdirs();
 				
 				project.copy {
