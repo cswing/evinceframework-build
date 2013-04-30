@@ -6,13 +6,10 @@
 *.ear
 
 # eclipse
-.eclipse-bin/*
-.settings/*
+.eclipse-bin/
+.settings/
 
 # gradle
-.gradle/*
-*/.gradle/*
-build/*
-*/build/*
-lib/*
-*/lib/*
+.gradle/
+build/
+lib/
