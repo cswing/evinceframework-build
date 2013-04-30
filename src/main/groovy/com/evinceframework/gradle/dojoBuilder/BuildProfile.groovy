@@ -228,7 +228,6 @@ public class BuildProfile {
 	 *
 	 *	dojo {
 	 *	    dojoVersion='1.8.3'
-	 *	    sourceRepository=javascriptRepo
 	 *	    buildWithNode=project.hasProperty('useNode').toBoolean() && project.useNode.toBoolean()
 	
 	 *		profile.configure {

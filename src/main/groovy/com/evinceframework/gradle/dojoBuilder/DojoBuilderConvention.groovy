@@ -35,15 +35,40 @@ public class DojoBuilderConvention {
 		super
 		
 		profile = new BuildProfile(this)
+		themes = new ThemeProfile(project, this)
 		source = "${project.projectDir}/src/js"
 		sourceDestination = "${project.name}-${project.version}"
 		outputPath = "${project.projectDir}/build"
+		userBuildHomeDirectory = "${System.properties['user.home']}/.evf"
+		sourceRepository = "${userBuildHomeDirectory}/dojoplugin/js_source"
 	}
+	
+	/**
+	 * The user's home directory for building software using the plugin.
+	 * 
+	 * Defaults to ${user.home}/.evf
+	 * @since 0.2.0
+	 */
+	def userBuildHomeDirectory
 	
 	/**
 	 * Configuration for the build profile
 	 */
 	def profile
+	
+	/**
+	 * Configuration for building custom themes.
+	 * 
+	 * @since 0.2.0
+	 */
+	def themes
+	
+	/**
+	 * Whether or not the theme cache should be reset when generating themes.
+	 *
+	 * @since 0.2.0
+	 */
+	def resetThemeCache = true
 	
 	/**
 	 * Tells the DojoBuilder plugin to use Node or Java to perform the build.
