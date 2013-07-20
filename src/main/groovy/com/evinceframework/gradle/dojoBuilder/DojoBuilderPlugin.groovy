@@ -69,14 +69,13 @@ public class DojoBuilderPlugin implements Plugin<Project> {
 		
 		project.task('clean', dependsOn:['uninstallSource', 'deleteOutput']){}
 		
-		project.task('generateThemes') << {
-		//project.task('generateThemes', dependsOn: 'installSource') << {
+		project.task('generateThemes', dependsOn: 'installSource') << {
 			convention.themes.customThemes.each { theme ->
 				theme.execute()
 			}
 		}
 		
-		project.task('build', dependsOn: ['generateThemes', 'deleteOutput']) << {
+		project.task('build', dependsOn: ['generateThemes', 'installSource', 'deleteOutput']) << {
 		
 			if(convention.buildWithNode){
 				println('Building using Node')
