@@ -8,6 +8,8 @@
 # eclipse
 .eclipse-bin/
 .settings/
+.metadata/
+Servers/
 
 # gradle
 .gradle/
