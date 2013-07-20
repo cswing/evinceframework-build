@@ -79,7 +79,7 @@ public class ThemeProfile {
 	}
 	
 	/**
-	 * Allow for custom themes to be deined in a build script using a closure.
+	 * Allow for custom themes to be defined in a build script using a closure.
 	 * 
 	 * @param closure
 	 * @return

@@ -191,6 +191,8 @@ public class ThemeGeneratorAction {
 		LessCompiler compiler = configureCompiler()
 		def imports = []
 		
+		FileUtils.deleteDirectory(new File("${outputDirectory}"))
+		
 		// compile less files to css
 		project.fileTree(includeDir) {
 			include '**/*.less'
