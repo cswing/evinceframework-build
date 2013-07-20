@@ -6,7 +6,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.evinceframework:evf-build-gradle:0.1.0-SNAPSHOT'
+        classpath 'com.evinceframework:evf-build-gradle:0.2.0-SNAPSHOT'
     }
 }
 
